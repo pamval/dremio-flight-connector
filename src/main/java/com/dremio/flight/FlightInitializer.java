@@ -52,7 +52,7 @@ import com.google.common.base.Preconditions;
  */
 public class FlightInitializer implements Initializer<Void>, AutoCloseable {
 
-  private static final String DEFAULT_HOST = "localhost";
+  private static final String DEFAULT_HOST = "127.0.0.1";
   private static final int DEFAULT_PORT = 47470;
   private static final boolean USE_SSL = false;
 

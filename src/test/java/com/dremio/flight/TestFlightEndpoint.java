@@ -29,11 +29,7 @@ import org.apache.arrow.flight.FlightStream;
 import org.apache.arrow.flight.Location;
 import org.apache.arrow.flight.auth.BasicClientAuthHandler;
 import org.apache.arrow.memory.BufferAllocator;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +70,7 @@ public class TestFlightEndpoint extends BaseTestQuery {
   }
 
   @Test
+  @Ignore
   public void connect() throws Exception {
     Location location = Location.forGrpcInsecure("localhost", 47470);
     try (FlightClient c = flightClient(getAllocator(), location)) {

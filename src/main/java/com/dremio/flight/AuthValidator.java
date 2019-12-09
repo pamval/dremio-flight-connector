@@ -53,6 +53,9 @@ public class AuthValidator implements BasicServerAuthHandler.BasicAuthValidator 
   @Override
   public byte[] getToken(String user, String password) throws Exception {
 //    UserSession.Builder.newBuilder()
+
+    logger.info("Called getToken with user " + user);
+
     UserService userService = this.userService.get();
     try {
       if (userService != null) {
@@ -75,7 +78,27 @@ public class AuthValidator implements BasicServerAuthHandler.BasicAuthValidator 
 
   @Override
   public Optional<String> isValid(byte[] bytes) {
-    String user = sessions.get(new ByteArrayWrapper(bytes)).getCredentials().getUserName();
+    ByteArrayWrapper wrapper = new ByteArrayWrapper(bytes);
+    UserSession session = sessions.get(wrapper);
+
+    if (session == null) {
+      //No Session - authenticate (?)
+      String credentials = new String(bytes);
+      logger.info("credentials: " + credentials);
+      String[] userAndPass = credentials.split(":");
+      try {
+        this.userService.get().authenticate(userAndPass[0], userAndPass[1]);
+      } catch (Exception e) {
+        logger.info("Exception while authenticating: ", e);
+        return null;
+      }
+      session = build(userAndPass[0], userAndPass[1]);
+      sessions.put(wrapper, session);
+      tokens.put(userAndPass[0], wrapper);
+
+
+    }
+    String user = session.getCredentials().getUserName();
     return Optional.ofNullable(user);
   }
 
